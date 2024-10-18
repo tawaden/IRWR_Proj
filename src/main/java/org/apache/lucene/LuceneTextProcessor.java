@@ -226,18 +226,7 @@ public class LuceneTextProcessor {
     }
     private void storeTopResults_bm25(int queryId, TopDocs topDocs) throws IOException {
         String outputPath = "/opt/IRWR_Proj/Result/results.txt";
-/*	File file = new File(outputPath);
-        if (file.exists()) {
-            // If file exists, delete it
-            if (file.delete()) {
-                System.out.println("Result File for BM25 deleted successfully");
-            } else {
-                System.out.println("Failed to delete the file for BM25");
-            }
-        } else {
-            System.out.println("BM25 result File does not exist.");
-        }
-*/
+
 	try (BufferedWriter writer = new BufferedWriter(new FileWriter(outputPath, true))) { // Append mode
             for (int i = 0; i < topDocs.scoreDocs.length; i++) {
                 ScoreDoc scoreDoc = topDocs.scoreDocs[i];
@@ -252,18 +241,6 @@ public class LuceneTextProcessor {
     private void storeTopResults_tf_idf(int queryId, TopDocs topDocs) throws IOException {
 	String outputPath1 = "/opt/IRWR_Proj/Result/results1.txt";
 
-        // Create a File object representing the file
-        /*File file = new File(outputPath1);
-	if (file.exists()) {
-            // If file exists, delete it
-            if (file.delete()) {
-                System.out.println("Result File for VSM deleted successfully");
-            } else {
-                System.out.println("Failed to delete the file for VSM");
-            }
-        } else {
-            System.out.println("File does not exist.");
-        }*/
         //String outputPath1 = "/opt/IRWR_Proj/results1.txt";
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(outputPath1, true))) { // Append mode
             for (int i = 0; i < topDocs.scoreDocs.length; i++) {
@@ -286,15 +263,11 @@ public class LuceneTextProcessor {
             System.out.println("Processing Query ID: " + queryId);
             System.out.println("Processing Query: " + entry.getValue());
             TopDocs bm25Results = searchWithBM25(entry.getValue());
-            //TopDocs results = searchWithBM25(entry.getValue()); // Search with the query text
             storeTopResults_bm25(Integer.parseInt(queryId),bm25Results); // Store the top results
-            //double avgPrecision = evaluatePrecision(queryId, bm25Results); // Evaluate precision for this query
-            //totalAP += avgPrecision; // Add to total average precision
 	    TopDocs tfidfResults = searchWithTFIDF(entry.getValue());
 	    storeTopResults_tf_idf(Integer.parseInt(queryId), tfidfResults);
         }
 
-        //return totalAP / queries.size();  // Mean Average Precision
     }
 
     public void readQueriesAndEvaluate(String queryFilePath) throws IOException, ParseException {
